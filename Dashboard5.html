@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        h1, h2 {
+            color: #e91919;
+        }
+        li {
+            caret-color: #e91919;
+            color: #7fb2c0;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: #e9dede;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #e91919;
+        }
+
+        .dashboard {
+            flex: 1;
+            padding: 20px;
+        }
+
+        #welcome-message {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .content {
+            margin-top: 20px;
+            max-height: 400px; /* Set a maximum height */
+            overflow-y: auto; /* Enable vertical scrollbar */
+            overflow-x: hidden; /* Hide horizontal scrollbar */
+        }
+
+        .goal-achieved, .referral-section, .transaction-section {
+            border: 1px solid #f80707;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            cursor: pointer;
+            color: #e91919;
+            background-color: blue;
+        }
+
+        .transaction-list {
+            margin-top: 10px;
+            max-height: 300px; /* Set a maximum height for transaction history */
+            overflow-y: auto; /* Enable vertical scrollbar */
+            overflow-x: hidden; /* Hide horizontal scrollbar */
+        }
+
+        .transaction {
+            border-bottom: 1px solid #ccc;
+            padding: 5px 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h2>Menu</h2>
+            <ul>
+                <li><a href="#" onclick="showDashboard()">Dashboard</a></li>
+                <li><a href="#" onclick="showTransactions()">Transactions</a></li>
+            </ul>
+        </aside>
+        <main class="dashboard">
+            <h1 id="welcome-message">Welcome, Prashanth</h1>
+            <div class="content">
+                <div class="goal-achieved">
+                    <h2>Goal Achieved</h2>
+                    <p id="donation-amount">$0</p>
+                </div>
+                <div class="referral-section hidden" id="referral-section">
+                    <h3>Your Referral Code</h3>
+                    <p id="referral-code">REF123456</p>
+                    <button onclick="copyReferralLink()">Copy Donation Link</button>
+                    <button onclick="shareOnWhatsApp()">Share on WhatsApp</button>
+                </div>
+                <div class="transaction-section hidden" id="transaction-section">
+                    <h3>Transaction History</h3>
+                    <div id="transaction-list" class="transaction-list"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Placeholder for user data
+        const user = {
+            referralCode: "REF123456",
+            transactions: [
+                { amount: 50, date: "2024-10-01" },
+                { amount: 30, date: "2024-09-15" },
+                { amount: 20, date: "2024-08-20" },
+                { amount: 25, date: "2024-07-20" },
+                { amount: 15, date: "2024-06-10" },
+                { amount: 40, date: "2024-05-05" },
+                { amount: 60, date: "2024-04-01" },
+                { amount: 10, date: "2024-03-15" },
+                { amount: 5, date: "2024-02-01" }, // Added to increase transaction count
+                { amount: 12, date: "2024-01-15" },
+                { amount: 45, date: "2023-12-20" }
+            ]
+        };
+
+        // Function to copy referral link to clipboard
+        function copyReferralLink() {
+            const donationLink = `https://example.com/donate?ref=${user.referralCode}`;
+            navigator.clipboard.writeText(donationLink).then(() => {
+                alert('Donation link copied to clipboard: ' + donationLink);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // Function to share on WhatsApp
+        function shareOnWhatsApp() {
+            const referralLink = `https://example.com/donate?ref=${user.referralCode}`;
+            const message = `Check out this donation link: ${referralLink}`;
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Function to display transactions
+        function displayTransactions() {
+            const transactionList = document.getElementById('transaction-list');
+            transactionList.innerHTML = ''; // Clear existing entries
+            user.transactions.forEach(transaction => {
+                const transactionItem = document.createElement('div');
+                transactionItem.className = 'transaction';
+                transactionItem.innerText = `Amount: $${transaction.amount} - Date: ${transaction.date}`;
+                transactionList.appendChild(transactionItem);
+            });
+        }
+
+        // Show Dashboard content
+        function showDashboard() {
+            document.getElementById('transaction-section').classList.add('hidden');
+            document.getElementById('referral-section').classList.remove('hidden');
+            displayTransactions(); // Clear transactions if displayed
+        }
+
+        // Show Transactions content
+        function showTransactions() {
+            document.getElementById('referral-section').classList.add('hidden');
+            document.getElementById('transaction-section').classList.remove('hidden');
+            displayTransactions(); // Populate transactions
+        }
+    </script>
+</body>
+</html>
